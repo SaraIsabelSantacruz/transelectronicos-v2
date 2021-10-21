@@ -3,7 +3,7 @@
 ### Análisis MAE (hoja programación) https://docs.google.com/spreadsheets/d/1I4eb7RlLn0ngxJ8ZXgQNhOnC5kdx94xmlKRRIDZULOU/edit#gid=457096989
 
 ### Correrlo
-#### //npm install
-#### //npm run server
-#### //corre en local host 8080
-#### Revisar los audio drivers 
+#### 1. npm install
+#### 2. npm run server
+#### 3. corre en local host 8080
+#### 4. Revisar los audio drivers 
