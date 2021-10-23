@@ -71,4 +71,11 @@ function sketch(s) {
   s.draw = () => {}
 }
 
+//frecuencia
+//.h con las categorías y su orden en el arreglo
+//npm install
+//npm run server
+//corre en local host 8080
+//agregar un h1 o p que indique corriendo con éxito
+
 new p5(sketch);
