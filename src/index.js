@@ -49,14 +49,15 @@ function sketch(s) {
       notas = notasArteNumbers.map(item => parseInt(s.map(item, minNumber, maxNumber, notaMidiMin, notaMidiMax)));
       newObject = {...newObject, [clase]: notas }
     })
-    let tiempoAnterior = millis();
+    let tiempoAnterior = s.millis();
     let intervaloIndividual = 0;
     let contador = 0;
-    while(millis()-tiempoAnterior>intervaloIndividual){
+    while(s.millis() - tiempoAnterior >= intervaloIndividual) {
       intervaloIndividual = intervalo[contador];
+      console.log(intervaloIndividual);
       sendMidiNote();
       contador++;
-      tiempoAnterior = millis();
+      tiempoAnterior = s.millis();
       if(contador >= intervalo.length - 1){
         contador = 0;
       }
@@ -64,7 +65,6 @@ function sketch(s) {
   }
 
   function sendMidiNote() {
-    //console.log('se esta ejecutando');
     const notasArte = newObject['arte'];
     const notasCiencia = newObject['ciencia'];
     if(cont >= notas.length - 1) cont = 0;
