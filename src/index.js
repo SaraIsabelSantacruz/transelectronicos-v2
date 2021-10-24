@@ -21,31 +21,42 @@ function sketch(s) {
     let tableArray = table.getArray();
     const valoresArte = tableArray[0]; valoresArte.pop(); valoresArte.shift();
     const valoresCiencia = tableArray[1]; valoresCiencia.pop(); valoresCiencia.shift();
-    const intervaloTiempo = tableArray[26]; intervaloTiempo.pop(); intervaloTiempo.shift();
+    const duracionReal = tableArray[26].map(item => parseInt(item)); duracionReal.pop(); duracionReal.shift();
+    const maxNumberInterval = Math.max(...duracionReal);
+    const minNumberInterval = Math.min(...duracionReal);
+    const intervaloTiempo = duracionReal.map(time => {
+      return parseInt(s.map(time, minNumberInterval, maxNumberInterval, 0, 100000));
+    });
     const notasMidiMaterias = { 
       arte: {
         notas: valoresArte
       }, 
       ciencia: {
         notas: valoresCiencia
-      } 
+      }
     }
-    setValuesMidi(notasMidiMaterias);
+    setValuesMidi(notasMidiMaterias, intervaloTiempo);
   }
 
-  function setValuesMidi(partitura) {
+  function setValuesMidi(partitura, intervalo) {
     const clases = Object.keys(partitura);
     clases.map(clase => {
-      const notasArteNumbers = partitura[clase].notas.map(item => parseInt(item));
+      const notasArteNumbers = partitura[clase].notas?.map(item => parseInt(item));
       const maxNumber = Math.max(...notasArteNumbers);
       const minNumber = Math.min(...notasArteNumbers);
       notas = notasArteNumbers.map(item => parseInt(s.map(item, minNumber, maxNumber, notaMidiMin, notaMidiMax)));
       newObject = {...newObject, [clase]: notas }
     })
-    setInterval(sendMidiNote, 1000);
+    let intervaloTiempoArray = intervalo;
+    
+    intervaloTiempoArray.forEach(time => {
+      //setInterval(sendMidiNote, time);
+    });
+    // setInterval(sendMidiNote, 1000);
   }
 
   function sendMidiNote() {
+    //console.log('se esta ejecutando');
     const notasArte = newObject['arte'];
     const notasCiencia = newObject['ciencia'];
     if(cont >= notas.length - 1) cont = 0;
@@ -54,8 +65,6 @@ function sketch(s) {
       outputCiencia.stopNote(notasCiencia[cont], 2);
     }
     cont++;
-    console.log('notas-arte:', notasArte[cont]);
-    console.log('notas-ciencia:', notasCiencia[cont]);
     outputArte.playNote(notasArte[cont], 1);
     outputCiencia.playNote(notasCiencia[cont], 2);
   }
