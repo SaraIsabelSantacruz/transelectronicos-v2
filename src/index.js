@@ -35,6 +35,8 @@ function sketch(s) {
         notas: valoresCiencia
       }
     }
+
+
     setValuesMidi(notasMidiMaterias, intervaloTiempo);
   }
 
@@ -47,12 +49,18 @@ function sketch(s) {
       notas = notasArteNumbers.map(item => parseInt(s.map(item, minNumber, maxNumber, notaMidiMin, notaMidiMax)));
       newObject = {...newObject, [clase]: notas }
     })
-    let intervaloTiempoArray = intervalo;
-    
-    intervaloTiempoArray.forEach(time => {
-      //setInterval(sendMidiNote, time);
-    });
-    // setInterval(sendMidiNote, 1000);
+    let tiempoAnterior = millis();
+    let intervaloIndividual = 0;
+    let contador = 0;
+    while(millis()-tiempoAnterior>intervaloIndividual){
+      intervaloIndividual = intervalo[contador];
+      sendMidiNote();
+      contador++;
+      tiempoAnterior = millis();
+      if(contador >= intervalo.length - 1){
+        contador = 0;
+      }
+    }
   }
 
   function sendMidiNote() {
