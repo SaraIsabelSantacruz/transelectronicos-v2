@@ -21,13 +21,12 @@ function sketch(s) {
     let tableArray = table.getArray();
     const valoresArte = tableArray[0]; valoresArte.pop(); valoresArte.shift();
     const valoresCiencia = tableArray[1]; valoresCiencia.pop(); valoresCiencia.shift();
+    const intervaloTiempo = tableArray[26]; intervaloTiempo.pop(); intervaloTiempo.shift();
     const notasMidiMaterias = { 
       arte: {
-        intervalo: 1000,
         notas: valoresArte
       }, 
       ciencia: {
-        intervalo: 2000,
         notas: valoresCiencia
       } 
     }
