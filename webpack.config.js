@@ -6,7 +6,8 @@ module.exports = {
   entry: './src/index.js',
   output: {
     filename: 'main.js',
-    path: '/'
+    path: path.resolve(__dirname, 'dist'),
+    publicPath: "/webpack-demo/"
   },
   module: {
     rules: [
