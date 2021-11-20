@@ -1,34 +1,40 @@
 import p5 from 'p5';
 import "./js/p5.sound";
 import WebMidi from "webmidi";
-import score from './assets/score2.csv';
+import scoreMae from './assets/scoreMae.csv';
+import score2 from './assets/score2.csv';
 
-var notaMidiMin = 36;
-var notaMidiMax = 95;
+let partitura;
 
 function sketch(s) {
-  let table;
+  let table1, table2;
   let outputArte, outputCiencia, outputTecnologia, notas;
   let newObject = {};
+  let tableArray = [];
   let cont = 0;
+  let interval;
 
   s.preload = () => {
-    table = s.loadTable(score, 'csv', 'header');
+    table1 = s.loadTable(scoreMae, 'csv', 'header');
+    table2 = s.loadTable(score2, 'csv', 'header');
   };
 
   s.setup = () => {
     s.createCanvas(window.innerWidth, window.innerHeight);
-    let tableArray = table.getArray();
+    const button = s.createButton('PLAY');
+    const button2 = s.createButton('STOP');
+    const button3 = s.createButton('MAE');
+    const button4 = s.createButton('MALA PRAXIS');
+
+    button.position(0, 30);
+    button2.position(120, 30);
+    button3.position(0, 0);
+    button4.position(120, 0);
+    tableArray = table2.getArray();
     const valoresArte = tableArray[0]; valoresArte.pop(); valoresArte.shift();
     const valoresCiencia = tableArray[1]; valoresCiencia.pop(); valoresCiencia.shift();
     const valoresTecnologia = tableArray[2]; valoresTecnologia.pop(); valoresTecnologia.shift();
-    const duracionReal = tableArray[26].map(item => parseInt(item)); duracionReal.pop(); duracionReal.shift();
-    const maxNumberInterval = Math.max(...duracionReal);
-    const minNumberInterval = Math.min(...duracionReal);
-    const intervaloTiempo = duracionReal.map(time => {
-      return parseInt(s.map(time, minNumberInterval, maxNumberInterval, 0, 100000));
-    });
-    const notasMidiMaterias = { 
+    const notasMidiMaterias = {
       arte: {
         notas: valoresArte
       }, 
@@ -39,21 +45,34 @@ function sketch(s) {
         notas: valoresTecnologia
       }
     }
-
-
-    setValuesMidi(notasMidiMaterias, intervaloTiempo);
+    setValuesMidi(notasMidiMaterias)
+    button.mousePressed(playNotes);
+    button2.mousePressed(stopNotes);
+    button3.mousePressed(() => {
+      tableArray = table1.getArray();
+      console.log(tableArray, 'MAE');
+    });
+    button4.mousePressed(() => {
+      tableArray = table2.getArray();
+      console.log(tableArray, 'MALA PRAXIS');
+    });
   }
 
-  function setValuesMidi(partitura, intervalo) {
+  function setValuesMidi(partitura) {
     const clases = Object.keys(partitura);
     clases.map(clase => {
-      const notasArteNumbers = partitura[clase].notas?.map(item => parseInt(item));
-      const maxNumber = Math.max(...notasArteNumbers);
-      const minNumber = Math.min(...notasArteNumbers);
-      notas = notasArteNumbers.map(item => parseInt(s.map(item, minNumber, maxNumber, notaMidiMin, notaMidiMax)));
+      const notasNumbers = partitura[clase].notas?.map(item => item ? parseInt(item) : 0);
+      const getValue = (value) => {
+        for (let index = 0; index < notasNumbers.length; index++) {
+          if(value === notasNumbersOrder[index]) return escala[index];
+        }
+      }
+      const notasNumbersOrder = [ ...new Set(notasNumbers)].sort((a, b) => a-b);
+      const escala = [0, 41, 43, 44, 46, 48, 50, 51, 53, 55, 56, 58, 60, 62, 63, 65, 67, 68, 70];
+      notas = notasNumbers.map(num => getValue(num));
       newObject = {...newObject, [clase]: notas }
+      console.log(notas);
     })
-    setInterval(sendMidiNote, 1000);
   }
 
   function sendMidiNote() {
@@ -71,6 +90,15 @@ function sketch(s) {
     outputArte.playNote(notasArte[cont], 1);
     outputCiencia.playNote(notasCiencia[cont], 1);
     outputTecnologia.playNote(notasTecnologia[cont], 1);
+  }
+
+  function playNotes() {
+    interval = setInterval(sendMidiNote, 1000);
+  }
+
+  function stopNotes() {
+    clearInterval(interval);
+    cont++;
   }
 
   WebMidi.enable(function(err) {
