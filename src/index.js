@@ -11,8 +11,14 @@ function sketch(s) {
   let outputArte, outputCiencia, outputTecnologia, notas;
   let newObject = {};
   let tableArray = [];
-  let cont = 0;
+  let indice = -1;
   let interval;
+  let notasArte ;
+  let notasCiencia ;
+  let notasTecnologia ;
+  let notasHumanas ;
+  let tiempos;
+
 
   s.preload = () => {
     table1 = s.loadTable(scoreMae, 'csv', 'header');
@@ -34,6 +40,7 @@ function sketch(s) {
     const valoresArte = tableArray[0]; valoresArte.pop(); valoresArte.shift();
     const valoresCiencia = tableArray[1]; valoresCiencia.pop(); valoresCiencia.shift();
     const valoresTecnologia = tableArray[2]; valoresTecnologia.pop(); valoresTecnologia.shift();
+    const valoresTiempo = tableArray[26]; valoresTiempo.pop(); valoresTiempo.shift();
     const notasMidiMaterias = {
       arte: {
         notas: valoresArte
@@ -43,6 +50,9 @@ function sketch(s) {
       }, 
       tecnologia: {
         notas: valoresTecnologia
+      },
+      duracionReal: {
+        notas: valoresTiempo
       }
     }
     setValuesMidi(notasMidiMaterias)
@@ -73,50 +83,56 @@ function sketch(s) {
       newObject = {...newObject, [clase]: notas }
       console.log(notas);
     })
+    //cargo los vectores
+    notasArte = newObject['arte'];
+    notasCiencia = newObject['ciencia'];
+    notasTecnologia = newObject['tecnologia'];
+    notasHumanas = newObject['CienciasHumanas'];
+    tiempos = newObject['duracionReal'];
+    console.log(newObject);
   }
 
+  function enviarNotaReaper(salida,notaAnterior,notaPorClase){
+    salida.stopNote(notaAnterior,1);
+    salida.playNote(notaPorClase, 1);
+    console.log("dispositivo "+salida+" nota "+notaPorClase);
+  }
   function sendMidiNote() {
-    const notasArte = newObject['arte'];
-    const notasCiencia = newObject['ciencia'];
-    const notasTecnologia = newObject['tecnologia'];
-    if(cont >= notas.length - 1) cont = 0;
-    if(cont !== 0) {
-      outputArte.stopNote(notasArte[cont], 1);
-      outputCiencia.stopNote(notasCiencia[cont], 1);
-      outputTecnologia.stopNote(notasTecnologia[cont], 1);
-    }
-    cont++;
-    console.log(notasArte[cont], notasCiencia[cont], notasTecnologia[cont]);
-    outputArte.playNote(notasArte[cont], 1);
-    outputCiencia.playNote(notasCiencia[cont], 1);
-    outputTecnologia.playNote(notasTecnologia[cont], 1);
+    let indiceAnterior=indice-1;
+    indiceAnterior =(indiceAnterior < 0)? notas.length - 1: indiceAnterior;
+    
+    enviarNotaReaper(outputArte,notasArte[indiceAnterior],notasArte[indice]);
+    enviarNotaReaper(outputCiencia,notasCiencia[indiceAnterior],notasCiencia[indice]);
+    enviarNotaReaper(outputTecnologia,notasTecnologia[indiceAnterior],notasTecnologia[indice]);
   }
 
   function playNotes() {
-    interval = setInterval(sendMidiNote, 1000);
+    indice++;
+    if(indice >= notas.length - 1) indice = 0;
+    sendMidiNote();
+    console.log("indice "+indice);
+    console.log("entro al proceso de ...");
+    interval = setTimeout(playNotes, tiempos[indice]*100);
   }
 
   function stopNotes() {
     clearInterval(interval);
-    cont++;
+    indice++;
   }
 
   WebMidi.enable(function(err) {
     if(err) { console.log("WebMidi could not be enabled.", err) }
-    outputArte = WebMidi.getOutputByName("IAC Driver Bus 1"); //Sara
-    outputCiencia = WebMidi.getOutputByName("IAC Driver Bus 2"); //Sara
-    outputTecnologia = WebMidi.getOutputByName("IAC Driver Bus 3"); //Sara
-    //outputArte = WebMidi.getOutputByName("Driver IAC Bus 1"); //Rosario
+    //outputArte = WebMidi.getOutputByName("IAC Driver Bus 1"); //Sara
+    //outputCiencia = WebMidi.getOutputByName("IAC Driver Bus 2"); //Sara
+    //outputTecnologia = WebMidi.getOutputByName("IAC Driver Bus 3"); //Sara
+    outputArte = WebMidi.getOutputByName("Driver IAC Bus 1"); //Rosario
+    outputCiencia = WebMidi.getOutputByName("Driver IAC Bus 2"); //Rosario
+    outputTecnologia = WebMidi.getOutputByName("Driver IAC Bus 3"); //Rosario
+    console.log(outputArte);
   });
 
   s.draw = () => {}
 }
 
-//frecuencia
-//.h con las categorías y su orden en el arreglo
-//npm install
-//npm run server
-//corre en local host 8080
-//agregar un h1 o p que indique corriendo con éxito
 
 new p5(sketch);
