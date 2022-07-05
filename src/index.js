@@ -1,6 +1,6 @@
 import p5 from 'p5';
 import "./js/p5.sound";
-import WebMidi from "webmidi";
+import { WebMidi } from "webmidi";
 import scoreMae from './assets/scoreMae.csv';
 import score2 from './assets/score2.csv';
 
@@ -23,6 +23,9 @@ function sketch(s) {
   s.preload = () => {
     table1 = s.loadTable(scoreMae, 'csv', 'header');
     table2 = s.loadTable(score2, 'csv', 'header');
+    WebMidi.enable()
+    .then(onWebMidiEnabled)
+    .catch(err => alert(err));
   };
 
   s.setup = () => {
@@ -55,6 +58,7 @@ function sketch(s) {
         notas: valoresTiempo
       }
     }
+
     setValuesMidi(notasMidiMaterias)
     button.mousePressed(playNotes);
     button2.mousePressed(stopNotes);
@@ -67,6 +71,20 @@ function sketch(s) {
       console.log(tableArray, 'MALA PRAXIS');
     });
   }
+
+  function onWebMidiEnabled() {
+    console.log(WebMidi);
+    // Check if at least one MIDI input is detected. If not, display warning and quit.
+    if (WebMidi.inputs.length < 1) {
+      alert("No MIDI inputs detected.");
+      return;
+    }
+
+    outputArte = WebMidi.getOutputByName("IAC Driver Bus 1"); //Sara
+    outputCiencia = WebMidi.getOutputByName("IAC Driver Bus 2"); //Sara
+    outputTecnologia = WebMidi.getOutputByName("IAC Driver Bus 3"); //Sara
+    //outputArte = WebMidi.getOutputByName("Driver IAC Bus 1"); //Rosario
+  };
 
   function setValuesMidi(partitura) {
     const clases = Object.keys(partitura);
@@ -98,12 +116,19 @@ function sketch(s) {
     console.log("dispositivo "+salida+" nota "+notaPorClase);
   }
   function sendMidiNote() {
-    let indiceAnterior=indice-1;
-    indiceAnterior =(indiceAnterior < 0)? notas.length - 1: indiceAnterior;
-    
-    enviarNotaReaper(outputArte,notasArte[indiceAnterior],notasArte[indice]);
-    enviarNotaReaper(outputCiencia,notasCiencia[indiceAnterior],notasCiencia[indice]);
-    enviarNotaReaper(outputTecnologia,notasTecnologia[indiceAnterior],notasTecnologia[indice]);
+    const notasArte = newObject['arte'];
+    const notasCiencia = newObject['ciencia'];
+    const notasTecnologia = newObject['tecnologia'];
+    if(cont >= notas.length - 1) cont = 0;
+    if(cont !== 0) {
+      outputArte.channels[1].stopNote(notasArte[cont]);
+      outputCiencia.channels[2].stopNote(notasCiencia[cont]);
+      outputTecnologia.channels[3].stopNote(notasTecnologia[cont]);
+    }
+    cont++;
+    outputArte.channels[1].playNote(notasArte[cont]);
+    outputCiencia.channels[2].playNote(notasCiencia[cont]);
+    outputTecnologia.channels[3].playNote(notasTecnologia[cont]);
   }
 
   function playNotes() {
@@ -119,7 +144,7 @@ function sketch(s) {
     clearInterval(interval);
     indice++;
   }
-
+  
   WebMidi.enable(function(err) {
     if(err) { console.log("WebMidi could not be enabled.", err) }
     //outputArte = WebMidi.getOutputByName("IAC Driver Bus 1"); //Sara
@@ -130,7 +155,6 @@ function sketch(s) {
     outputTecnologia = WebMidi.getOutputByName("Driver IAC Bus 3"); //Rosario
     console.log(outputArte);
   });
-
   s.draw = () => {}
 }
 
