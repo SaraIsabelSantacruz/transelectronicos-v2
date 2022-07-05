@@ -4,6 +4,6 @@
 
 ### Correrlo
 #### 1. npm install
-#### 2. npm run server
+#### 2. npm run serve
 #### 3. corre en local host 8080
 #### 4. Revisar los audio drivers 
