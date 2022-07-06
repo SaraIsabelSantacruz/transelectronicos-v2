@@ -107,6 +107,7 @@ function sketch(s) {
     outputArte.channels[1].playNote(notasArte[cont]);
     outputCiencia.channels[2].playNote(notasCiencia[cont]);
     outputTecnologia.channels[3].playNote(notasTecnologia[cont]);
+    console.log(notasArte[cont]);
   }
 
   function playNotes() {
