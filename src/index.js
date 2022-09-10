@@ -143,7 +143,10 @@ function sketch(s) {
 
   function stopNotes() {
     clearInterval(interval);
-    //indice++;//todo: sara lo cambie yo
+    indice++;//todo: no entiendo pq si al play ya le sumas
+    outputArte.channels[1].playNote(127);
+    outputCiencia.channels[2].playNote(127);
+    outputTecnologia.channels[3].playNote(127);
   }
   
   WebMidi.enable(function(err) {
