@@ -138,12 +138,12 @@ function sketch(s) {
     sendMidiNote();
     console.log("indice "+indice);
     console.log("entro al proceso de ...");
-    interval = setTimeout(playNotes, tiempos[indice]*100);
+    interval = setTimeout(playNotes, tiempos[indice]*150);//todo: sara lo cambie yo
   }
 
   function stopNotes() {
     clearInterval(interval);
-    indice++;
+    //indice++;//todo: sara lo cambie yo
   }
   
   WebMidi.enable(function(err) {
