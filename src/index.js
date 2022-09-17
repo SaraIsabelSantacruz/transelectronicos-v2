@@ -5,7 +5,7 @@ import scoreMae from './assets/scoreMae.csv';
 import score2 from './assets/score2.csv';
 
 let partitura;
-
+console.log('Se inicia el programa');
 function sketch(s) {
   let table1, table2;
   let outputArte, outputCiencia, outputTecnologia, notas, tiempos;
