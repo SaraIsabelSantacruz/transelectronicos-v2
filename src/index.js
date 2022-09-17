@@ -70,9 +70,9 @@ function sketch(s) {
       return;
     }
 
-    outputArte = WebMidi.getOutputByName("IAC Driver Bus 1"); //Sara
-    outputCiencia = WebMidi.getOutputByName("IAC Driver Bus 2"); //Sara
-    outputTecnologia = WebMidi.getOutputByName("IAC Driver Bus 3"); //Sara
+    outputArte = WebMidi.getOutputByName("MIDITRANS Bus 1"); //Sara
+    outputCiencia = WebMidi.getOutputByName("MIDITRANS Bus 2"); //Sara
+    outputTecnologia = WebMidi.getOutputByName("MIDITRANS Bus 3"); //Sara
     //outputArte = WebMidi.getOutputByName("Driver IAC Bus 1"); //Rosario
   };
 
