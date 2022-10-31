@@ -148,7 +148,7 @@ function sketch(s) {
       outputArte.channels[1].stopNote(notasArte[cont]);
     }
     if(notasArte[cont] !== 0) {
-      outputArte.channels[1].playNote(notasArte[cont], { duration: tiempoArte[cont]*8000 });
+      outputArte.channels[1].playNote(notasArte[cont], { duration: tiempoArte[cont]*10400 });
       console.log(cont, notasArte[cont], 'arte');
     }
     cont++;
@@ -162,7 +162,7 @@ function sketch(s) {
       outputCiencia.channels[2].stopNote(notasCiencia[cont]);
     }
     if(notasCiencia[cont] !== 0) {
-      outputCiencia.channels[2].playNote(notasCiencia[cont], { duration: tiempoCiencia[cont]*8000 });
+      outputCiencia.channels[2].playNote(notasCiencia[cont], { duration: tiempoCiencia[cont]*10400 });
       console.log(cont, notasCiencia[cont], 'ciencia');
     }
     cont++;
@@ -176,7 +176,7 @@ function sketch(s) {
       outputTecnologia.channels[3].stopNote(notasTecnologia[cont]);
     }
     if(notasTecnologia[cont] !== 0 ) {
-      outputTecnologia.channels[3].playNote(notasTecnologia[cont], { duration: tiempoTecnologia[cont]*8000 });
+      outputTecnologia.channels[3].playNote(notasTecnologia[cont], { duration: tiempoTecnologia[cont]*10400 });
       console.log(cont, notasTecnologia[cont], 'Tecnologia');
     }
     cont++;
@@ -189,7 +189,7 @@ function sketch(s) {
   function playNotes() {
     timerArte = setTimeout(function request() {
       if(delayArte <= 24) {
-        timeArte = newObject['arte'].tiempos[delayArte]*8000;
+        timeArte = newObject['arte'].tiempos[delayArte]*10400;
         envioNotasArte();
         delayArte++;
         timerArte = setTimeout(request, timeArte);
@@ -199,7 +199,7 @@ function sketch(s) {
 
     timerCiencia = setTimeout(function request() {
       if(delayCiencia <= 24) {
-        timeCiencia = newObject['ciencia'].tiempos[delayCiencia]*8000;
+        timeCiencia = newObject['ciencia'].tiempos[delayCiencia]*10400;
         envioNotasCiencia();
         delayCiencia++;
         timerCiencia = setTimeout(request, timeCiencia);
@@ -209,7 +209,7 @@ function sketch(s) {
 
     timerTec = setTimeout(function request() {
       if(delayTec <= 24) {
-        timeTec = newObject['tecnologia'].tiempos[delayTec]*8000;
+        timeTec = newObject['tecnologia'].tiempos[delayTec]*10400;
         envioNotasTec();
         delayTec++;
         timerTec = setTimeout(request, timeTec);
